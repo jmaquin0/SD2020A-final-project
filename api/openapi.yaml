@@ -1,0 +1,106 @@
+openapi: 3.0.0
+info:
+  title: Sample API
+  description: A sample API to undertand how swaggerhub works
+  version: 1.0.0
+servers:
+- url: https://api.example.com/v1
+paths:
+  /users/:
+    get:
+      summary: returns a list of all users
+      operationId: usersGET
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+    post:
+      summary: inserts an user in database
+      operationId: usersPOST
+      requestBody:
+        description: User to add into the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+        required: true
+      responses:
+        "201":
+          description: Suscesfully created user
+          content:
+            application/json:
+              schema:
+                type: integer
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_default'
+      x-swagger-router-controller: Default
+  /users/{userId}:
+    get:
+      summary: returns an user by Id,
+      operationId: usersUserIdGET
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: The specified user ID is invalid (e.g. not a number)
+        "404":
+          description: A user with the specified ID was not found
+      x-swagger-router-controller: Default
+components:
+  schemas:
+    inline_response_200:
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        name: name
+        id: 0
+    body:
+      type: object
+      properties:
+        name:
+          type: string
+    inline_response_default:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    inline_response_200_1:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      example:
+        name: name
+        id: 0
